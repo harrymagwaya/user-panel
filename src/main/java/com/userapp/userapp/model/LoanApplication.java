@@ -50,7 +50,7 @@ public class LoanApplication {
     @PrePersist
     public void defaultTime(){
         if (createdAt == null) {
-            createdAt = createdAt.now();
+            createdAt = LocalDateTime.now();
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -59,6 +60,9 @@ public class User {
 
     @NonNull
     public Boolean hasDisability;
+
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Disability> disabilities = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     private List <Post> posts = new ArrayList<>();
