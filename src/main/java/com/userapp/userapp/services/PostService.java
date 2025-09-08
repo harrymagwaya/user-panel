@@ -45,7 +45,7 @@ public class PostService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return postRepository.findByCreatedBy(user);
+        return postRepository.findByAuthor(user);
     }
 
 }

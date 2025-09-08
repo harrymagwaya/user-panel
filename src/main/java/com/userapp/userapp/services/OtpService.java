@@ -31,42 +31,58 @@ public class OtpService {
 
     private final Map<String, String> otpStore = new HashMap<>();
 
-    Otp record = new Otp();
+    //private Otp record = new Otp();
 
 
     public String generateAndSendOtp(String phoneNum){
 
-        Optional <User> user = userRepository.findByUserId(phoneNum);
+        Optional <Otp> user = otpRepository.findTopByPhoneNumber(phoneNum);
             if (user.isEmpty()) {
                 throw new RuntimeException("User not found");
         }
             otpStore.put(phoneNum, otp);
 
-            LocalDateTime createdAt = LocalDateTime.now();
-            record.setCreatedTime(createdAt);
- 
-            record.setCode(otp);
+            Otp checkotp = user.get();
 
-            record.setUserId(phoneNum);
+            LocalDateTime createdAt = LocalDateTime.now();
+            checkotp.setCreatedTime(createdAt);
+
+            LocalDateTime expires = createdAt.plusMinutes(2);
+            checkotp.setExpiryTime(expires);
+ 
+            User me = userRepository.findByUserId(phoneNum).orElseThrow(()-> new RuntimeException("user not exist"));
+            checkotp.setUserId(me);
+
+            checkotp.setIsUsed(true);
+
+            checkotp.setPhoneNumber(phoneNum);
         
             System.out.println("sent opt " + otp + phoneNum);
             return otp;
     }
 
-    public boolean verifyOtp(String phoneNum, String otp){
-        // Optional<User> user = userRepository.findByPhoneNumber(phoneNum);
-        // if (user.isEmpty()) {
-        //     throw new RuntimeException("User not found");
-        // }
-      
-   
-        // if (LocalDateTime.now().isAfter(expiryTime)) {
-        //     record.setStatus_of_otp(Status_of_otp.EXPIRED);
-        // }
-        record.setIsUsed(true);
-        record.setStatus_of_otp(Status_of_otp.USED);
+    public boolean verifyOtp(String phoneNum, String submittedOtp){
+        Optional<Otp> user = otpRepository.findTopByPhoneNumber(phoneNum);
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        Otp checkotp = user.get();
+
+        if (LocalDateTime.now().isAfter(checkotp.getExpiryTime())) {
+            return false;
+        }
+
+        if (!checkotp.getCode().equals(submittedOtp)) {
+            return false;
+        }
+       
+        checkotp.setIsUsed(true);
+        checkotp.setStatus_of_otp(Status_of_otp.USED);
         //otpRepository.save(record);
-        return otp.equals(otp);
+       otpRepository.save(checkotp);
+
+        return true;
     }
 
     

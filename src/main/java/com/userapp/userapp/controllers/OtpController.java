@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.userapp.userapp.model.Otp;
+import com.userapp.userapp.model.OtpRequest;
 import com.userapp.userapp.model.User;
 import com.userapp.userapp.model.Otp.Status_of_otp;
 import com.userapp.userapp.repository.OtpRepository;
@@ -41,40 +42,30 @@ public class OtpController {
     @GetMapping("/get-otp")
     public ResponseEntity<String> getOtp(@RequestBody String phoneNum) {
         
-        String phone = otp.getUserId();
-
-        Optional<User> user = userRepository.findByUserId(phone);
+        Optional<User> user = userRepository.findByUserId(phoneNum);
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
         }
         otpService.generateAndSendOtp(user.get().getUserId());
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("otp sent to" + phone);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("otp sent to" + phoneNum);
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<?> verifyOtp(@RequestBody Otp otp) {
+    public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {
 
-        String phoneNum = otp.getUserId();
-        String otpCode = otp.getCode();
+        Otp otp =new Otp();
+        String phoneNum = request.getPhoneNum();
+        String otpCode = request.getOtp();
         if (otp.getCode() == null) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("no otp found");
         }
 
-        LocalDateTime now =LocalDateTime.now();
-        if (otp.getCreatedTime().plusMinutes(2).isAfter(now)) {
-            otp.setExpiryTime(now);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("otp expired");
-            
-        }
-
-        boolean valid = otpService.verifyOtp(phoneNum, otpCode);
+        boolean valid = otpService.verifyOtp(otp.getCode(), otpCode);
         if (valid) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("welcome account created");
         }
 
-        //otp.setStatus_of_otp(Status_of_otp.USED);
-        otpRepository.save(otp);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("wrong otp");
     }
     

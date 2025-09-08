@@ -16,11 +16,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NonNull;
 
 @Entity
 @Data
+@Table(name = "user_posts")
 public class Post {
 
     @Id
@@ -31,6 +33,7 @@ public class Post {
     private String title;
 
     @NonNull
+    @Column(name = "content")
     private String postContent;
 
     @Enumerated(EnumType.STRING)

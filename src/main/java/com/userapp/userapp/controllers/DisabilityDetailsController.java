@@ -40,10 +40,10 @@ public class DisabilityDetailsController {
     }
 
     @PostMapping("/add-disability")
-    public RequestEntity<?> postMethodName(@RequestBody List<Disability> entity) {
+    public ResponseEntity<String> postMethodName(@RequestBody List<Disability> entity) {
         disabilityService.saveDisability(entity);
-        disabilityRepository.saveAll(entity);
-        return ResponseEntity;
+        return ResponseEntity.ok("saved");
+     
     }
     
     

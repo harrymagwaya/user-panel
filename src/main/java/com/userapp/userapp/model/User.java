@@ -6,65 +6,78 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.NonNull;
 
 @Entity
 @Data
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String userId;
 
-    @NonNull
+    
     private String fName;
 
-    @NonNull
+    
     private String lName;
 
-    @Email
+  
+    private long phoneNum;
+
+     
     private String userEmail;
 
-    @NonNull
+    
     private String nationalId;
 
-    @NonNull
+  
     private String userDescription;
 
-    @NonNull
+   
     private String userProffession;
 
-    @NonNull
+    
     private BigDecimal  incomePerAnnum;
 
     private String pictureUrl;
 
-    @NonNull
+    
     private Date dateOfBirth;
 
-    @NonNull
+    
     private String academicQualification;
 
-    @NonNull
+   
     private String areaOfInterest;
 
-    @NonNull
+   @Column(name = "gender_")
     private String gender;
 
     @NonNull
     public Boolean hasDisability;
 
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Disability> disabilities = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List <Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userId")
+    private List<Otp> otps = new ArrayList<>();
+
+    @OneToOne(mappedBy = "requesterId")
+    private LoanApplication loan;
 
 }
