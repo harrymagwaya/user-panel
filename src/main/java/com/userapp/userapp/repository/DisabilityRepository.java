@@ -12,5 +12,7 @@ import com.userapp.userapp.model.User;
 public interface DisabilityRepository extends JpaRepository<Disability, Long> {
     List<Disability> findByUser(User user);
 
+    List<Disability> findAllByUser(User currUser);
+
     //void saveAll(List<Disability> entity);
 }

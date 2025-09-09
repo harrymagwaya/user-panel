@@ -10,6 +10,7 @@ import com.userapp.userapp.services.DisabilityService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/user/disabilities")
+@Profile("rest")
 public class DisabilityDetailsController {
 
     private final DisabilityRepository disabilityRepository;

@@ -12,6 +12,8 @@ import com.userapp.userapp.model.User;
 import com.userapp.userapp.repository.PostRepository;
 import com.userapp.userapp.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PostService {
     
@@ -40,6 +42,7 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    @Transactional
     public List<Post> getPostsByCurrentUser() {
         String userId = userContext.getCurrentUserId();
         User user = userRepository.findById(userId)

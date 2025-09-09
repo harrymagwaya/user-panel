@@ -1,6 +1,7 @@
 package com.userapp.userapp.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import lombok.NonNull;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 10)
     private String userId;
 
     
@@ -34,9 +36,9 @@ public class User {
     private String lName;
 
   
-    private long phoneNum;
+    private String phoneNum;
 
-     
+    @Column(name = "email_")
     private String userEmail;
 
     
@@ -49,17 +51,17 @@ public class User {
     private String userProffession;
 
     
-    private BigDecimal  incomePerAnnum;
+    private double  incomePerAnnum;
 
     private String pictureUrl;
 
     
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     
     private String academicQualification;
 
-   
+    @Column(name = "areao_of_interest")
     private String areaOfInterest;
 
    @Column(name = "gender_")
@@ -71,7 +73,7 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Disability> disabilities = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "author")
     private List <Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "userId")
@@ -79,5 +81,9 @@ public class User {
 
     @OneToOne(mappedBy = "requesterId")
     private LoanApplication loan;
+
+    User(){
+
+    }
 
 }

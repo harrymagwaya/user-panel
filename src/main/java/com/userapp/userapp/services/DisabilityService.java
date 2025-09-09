@@ -52,4 +52,10 @@ public class DisabilityService {
         return disabilityRepository.findByUser(user);
 
     }
+
+
+    public List<Disability> findByUser(User currUser ) {
+       return disabilityRepository.findAllByUser(currUser);
+    }
+
 }

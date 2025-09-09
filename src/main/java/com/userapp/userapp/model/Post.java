@@ -44,7 +44,7 @@ public class Post {
     @Nonnull
     private Timestamp createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id ")
     private User author;
 
@@ -57,6 +57,7 @@ public class Post {
 
     }
 
+
     public Post() {
         //TODO Auto-generated constructor stub
     }
@@ -68,3 +69,5 @@ public class Post {
     }
 
 }
+
+

@@ -26,12 +26,12 @@ public class LoanApplication {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "")
-    private Long id;
+    @Column(name = "loan_id")
+    private Long loanId;
 
     @NotEmpty
     @Column(name = "loan_amount")
-    private long loanAmount;
+    private Integer loanAmount;
 
 
     @NonNull
@@ -67,8 +67,7 @@ public class LoanApplication {
     public void defaultTime(){
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
-        }
-        
+        }     
     }
 
     public LoanApplication() {
@@ -81,4 +80,9 @@ public class LoanApplication {
         APPROVED,
         REJECTED
     }
+
+   
+
+    
 }
+

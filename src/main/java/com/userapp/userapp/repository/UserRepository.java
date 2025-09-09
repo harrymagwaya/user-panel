@@ -10,4 +10,11 @@ import com.userapp.userapp.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     Optional <User> findByUserId(String userId);
+
+    Optional <User> findByPhoneNum(String phoneNum);
+
+    boolean existsByUserId(String phone);
+
+	boolean existsByPhoneNum(String phone);
 }
+

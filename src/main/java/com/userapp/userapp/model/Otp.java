@@ -32,7 +32,7 @@ public class Otp {
     private String phoneNumber;
 
     @NonNull
-    @Column(name = "code")
+    @Column(name = "code_")
     private String code;
 
     @NonNull
