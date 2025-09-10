@@ -35,7 +35,7 @@ public class User {
     
     private String lName;
 
-  
+    @Column(name = "phone_num")
     private String phoneNum;
 
     @Column(name = "email_")
@@ -70,13 +70,13 @@ public class User {
     @NonNull
     public Boolean hasDisability;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Disability> disabilities = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "author")
     private List <Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER)
     private List<Otp> otps = new ArrayList<>();
 
     @OneToOne(mappedBy = "requesterId")

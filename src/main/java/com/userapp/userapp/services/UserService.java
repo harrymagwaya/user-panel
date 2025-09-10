@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public String getLink(User user){
-        return user.getPhoneNum();
+        return user.getUserId();
     }
 
     public boolean checkUserExists(String id){
@@ -62,4 +62,12 @@ public class UserService {
         
         log.info("User {} updated profile at {}", userId, LocalDateTime.now());
     }
+
+    public User getCurrentAuthenticatedUser() {
+        String userId = userContextService.getCurrentUserId();
+
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 }

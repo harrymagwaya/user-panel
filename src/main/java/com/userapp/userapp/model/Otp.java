@@ -46,33 +46,31 @@ public class Otp {
     @Column(name = "is_entered") 
     private Boolean isUsed;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_of_otp")
-    private Status_of_otp status_of_otp;
+   
 
-    public static enum Status_of_otp{
-        PENDING,
-        USED,
-        EXPIRED
-    }
+    // public static enum Status_of_otp{
+    //     PENDING,
+    //     USED,
+    //     EXPIRED
+    // }
 
 
-    @PrePersist
-    public void default_time_STATUS(){
-        createdTime = LocalDateTime.now();
-        if (expiryTime == null) {
-            expiryTime = createdTime.plusMinutes(2);
-        }
+    // @PrePersist
+    // public void default_time_STATUS(){
+    //     createdTime = LocalDateTime.now();
+    //     if (expiryTime == null) {
+    //         expiryTime = createdTime.plusMinutes(2);
+    //     }
 
-        if (status_of_otp == null) {
-            status_of_otp = Status_of_otp.PENDING;
-        }
-    }
+    //     if (status_of_otp == null) {
+    //         status_of_otp = Status_of_otp.PENDING;
+    //     }
+    // }
 
    
     @Override
     public String toString(){
-        return "id" + getOtpId() + getCode() +  getCreatedTime() + getIsUsed() + getExpiryTime() + getStatus_of_otp();
+        return "id" + getOtpId() + getCode() +  getCreatedTime() + getIsUsed() + getExpiryTime() ;
     }
 
 

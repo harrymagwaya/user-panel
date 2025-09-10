@@ -7,13 +7,19 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.userapp.userapp.model.MyUserDetails;
 import com.userapp.userapp.model.Otp;
 import com.userapp.userapp.model.User;
-import com.userapp.userapp.model.Otp.Status_of_otp;
+
 import com.userapp.userapp.repository.OtpRepository;
 import com.userapp.userapp.repository.UserRepository;
+
+import org.springframework.security.core.Authentication;
 
 
 @Service
@@ -24,6 +30,9 @@ public class OtpService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     private final Random random = new Random();
 
@@ -50,7 +59,7 @@ public class OtpService {
             LocalDateTime expires = createdAt.plusMinutes(2);
             checkotp.setExpiryTime(expires);
  
-            User me = userRepository.findByPhoneNum(phoneNum).orElseThrow(()-> new RuntimeException("user not exist"));
+            User me = userRepository.findByUserId(phoneNum).orElseThrow(()-> new RuntimeException("user not exist"));
             checkotp.setUserId(me);
 
             checkotp.setIsUsed(true);
@@ -64,8 +73,9 @@ public class OtpService {
     }
 
     public boolean verifyOtp(String phoneNum, String submittedOtp){
+        System.out.println("verifying : " + phoneNum);
         phoneNum = phoneNum.trim();
-        Optional<User> user = userRepository.findByPhoneNum(phoneNum);
+        Optional<User> user = userRepository.findByUserId(phoneNum);
         if (user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -83,7 +93,15 @@ public class OtpService {
         // checkotp.setIsUsed(true);
         // checkotp.setStatus_of_otp(Status_of_otp.USED);
         // //otpRepository.save(record);
-      
+        MyUserDetails userDetails = userDetailsService.loadUserByUsername(phoneNum);
+
+       // System.out.println("user details in verOTP: " + userDetails);
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        
 
         return true;
     }

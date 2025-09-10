@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.userapp.userapp.model.Otp;
 import com.userapp.userapp.model.OtpRequest;
 import com.userapp.userapp.model.User;
-import com.userapp.userapp.model.Otp.Status_of_otp;
+
 import com.userapp.userapp.repository.OtpRepository;
 import com.userapp.userapp.repository.UserRepository;
 import com.userapp.userapp.services.OtpService;

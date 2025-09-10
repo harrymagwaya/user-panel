@@ -2,6 +2,11 @@ package com.userapp.userapp.frontend.views.post;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+
 import com.userapp.userapp.frontend.layout.MainLayout;
 import com.userapp.userapp.model.Post;
 import com.userapp.userapp.services.PostService;
@@ -19,9 +24,12 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 
 @Route(value = "posts", layout = MainLayout.class)
 public class PostView extends VerticalLayout {
+
+
      private final PostService postService;
 
     public PostView(PostService postService) {
@@ -29,6 +37,11 @@ public class PostView extends VerticalLayout {
         setPadding(true);
         setSpacing(true);
         setAlignItems(Alignment.CENTER);
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        VaadinSession.getCurrent().getSession()
+        .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
 
         add(new H2("Recent Posts"));
 
@@ -47,7 +60,7 @@ public class PostView extends VerticalLayout {
 
 
         HorizontalLayout header = new HorizontalLayout();
-        Image avatar = new Image(post.getAuthor().getPictureUrl(), "Avatar");
+        Image avatar = new Image("/static/3375.jpg.webp", "Avatar");
         avatar.setWidth("50px");
         avatar.setHeight("50px");
         avatar.getStyle().set("border-radius", "50%");
@@ -75,7 +88,13 @@ public class PostView extends VerticalLayout {
         Button profileButton = new Button("See Profile", VaadinIcon.USER.create());
         profileButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("user/" + post.getAuthor().getUserId())));
 
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // System.out.println("Auth: " + auth);
+        // System.out.println("Principal: " + auth.getPrincipal());
+        // System.out.println("Principal class: " + auth.getPrincipal().getClass());
+
         card.add(header, content, profileButton);
         return card;
     }
 }
+

@@ -45,7 +45,7 @@ public class PostService {
     @Transactional
     public List<Post> getPostsByCurrentUser() {
         String userId = userContext.getCurrentUserId();
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return postRepository.findByAuthor(user);

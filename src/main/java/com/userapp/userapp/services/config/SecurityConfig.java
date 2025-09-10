@@ -24,7 +24,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/auth/","/UIDL/**", "/auth/request-otp", "/auth/verify-otp/:phone").permitAll()
+                        .requestMatchers("/api/auth/","/UIDL/**", "/auth/request-otp", "/auth/verify-otp/:phone", "/profile/**").permitAll()
+                        .requestMatchers("/static/**", "/css/**", "/js/**").permitAll()
                         .requestMatchers(req-> isVaadinInternalRequest(req)).permitAll()
                         .requestMatchers("/VAADIN/**",
                         "/frontend/**",
@@ -41,7 +42,6 @@ public class SecurityConfig {
                 //.formLogin(login -> login.disable());
 
         return http.build();
-
     }
 
     

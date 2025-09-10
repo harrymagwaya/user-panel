@@ -4,11 +4,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import com.userapp.userapp.model.Otp;
-import com.userapp.userapp.model.User;
+
 import com.userapp.userapp.repository.UserRepository;
+import com.userapp.userapp.services.CustomUserDetailsService;
 import com.userapp.userapp.services.OtpService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -21,6 +25,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import org.springframework.security.core.Authentication;
 
 @Route("verify-otp/:phone")
 public class VerifyOtp extends VerticalLayout implements BeforeEnterObserver{
@@ -39,6 +44,9 @@ public class VerifyOtp extends VerticalLayout implements BeforeEnterObserver{
     @Autowired
     private OtpService otpService;
 
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
     private int secondsRemaining = 300;
 
     public VerifyOtp( OtpService otpService, UserRepository repository) {
@@ -53,6 +61,13 @@ public class VerifyOtp extends VerticalLayout implements BeforeEnterObserver{
                 
                 boolean valid = otpService.verifyOtp(phone, request.getCode());
                 if (valid) {
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(phone);
+
+                    Authentication auth = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
                     Notification.show("Login successful");
                     getUI().ifPresent(ui -> ui.navigate("posts"));
                 } else {
